@@ -4,22 +4,24 @@ function myMap() {
         zoom:11,
     };
     var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+    var geocoder = new google.maps.Geocoder();
 
+    document.getElementById("submit").addEventListener("click", function() {
+        geocodeAddress(geocoder, map);
+    });
 }
 
-// aa function searchForm() {
-  //  document.querySelector("#form1").addEventListener("submit", function(event) {
-    //    document.getElementById("formbox")
-      //  event.preventDefault();
-   // })
-    // aa document.getElementById("form1").addEventListener("submit", function(evt) {
-        // aa search(document.getElementById("searchterm"));
-        // aa evt.preventDefault();
-    //form.addEventListener("submit", event.preventDefault());
-    //evt.preventDefault();
-    // aa })
-// aa }
-
-//$('#searchterm').submit(function(e) {
-  //  e.preventDefault();
-//});
+function geocodeAddress(geocoder, resultsMap) {
+    var address = document.getElementById("address").value;
+    geocoder.geocode({"address" : address}, function(results, status) {
+        if (status == "OK") {
+            resultsMap.setCenter(results[0].geometry.location);
+            var marker = new google.maps.Marker({
+                map: resultsMap,
+                position: results[0].geometry.location
+            });
+        } else {
+            alert("There was an error: " + status);
+        }
+    });
+}
